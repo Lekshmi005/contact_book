@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title> Contact Book</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+
+        /* ✅ Background Image */
+        background-image: url("data_record.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.92);
+        width: 100%;
+        max-width: 500px;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 6px 0;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #2c80b4;
+    }
+
+    .search {
+        margin-top: 18px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 15px;
+    }
+
+    li {
+        background: #f4f6f8;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .delete-btn {
+        background: #e74c3c;
+        padding: 6px 10px;
+        border-radius: 5px;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .delete-btn:hover {
+        background: #c0392b;
+    }
+
+    .empty {
+        text-align: center;
+        color: #777;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>📒 Simple Contact Book</h1>
+
+    <!-- Add Contact -->
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="phone" placeholder="Phone Number">
+    <input type="email" id="email" placeholder="Email">
+    <button onclick="addContact()">Add Contact</button>
+
+    <!-- Search -->
+    <input class="search" type="text" id="search" placeholder="Search by name..." onkeyup="displayContacts()">
+
+    <!-- Contact List -->
+    <ul id="contactList"></ul>
+</div>
+
+<script>
+    let contacts = [];
+
+    function addContact() {
+        const name = document.getElementById("name").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
+
+        if (!name || !phone || !email) {
+            alert("Please fill all fields");
+            return;
+        }
+
+        contacts.push({ name, phone, email });
+
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("email").value = "";
+
+        displayContacts();
+    }
+
+    function displayContacts() {
+        const list = document.getElementById("contactList");
+        const searchValue = document.getElementById("search").value.toLowerCase();
+        list.innerHTML = "";
+
+        const filteredContacts = contacts.filter(contact =>
+            contact.name.toLowerCase().includes(searchValue)
+        );
+
+        if (filteredContacts.length === 0) {
+            list.innerHTML = `<li class="empty">No contacts found</li>`;
+            return;
+        }
+
+        filteredContacts.forEach((contact, index) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <div>
+                    <strong>${contact.name}</strong><br>
+                    ${contact.phone}<br>
+                    ${contact.email}
+                </div>
+                <button class="delete-btn" onclick="deleteContact(${index})">Delete</button>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    function deleteContact(index) {
+        contacts.splice(index, 1);
+        displayContacts();
+    }
+</script>
+
+</body>
+</html>
